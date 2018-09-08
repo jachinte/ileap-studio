@@ -29,7 +29,7 @@ class TestCase extends Component {
         <div className="labels">
           <label htmlFor={`input-${random}`}>Input</label>
           <label htmlFor={`output-${random}`}>Output</label>
-          <a style={{visibility: 'hidden'}}>x</a>
+          {/*<a style={{visibility: 'hidden'}}>x</a>*/}
         </div>
         <div className="fields">
           <textarea
@@ -42,7 +42,7 @@ class TestCase extends Component {
             id={`output-${random}`}
             onChange={this.onEditOutput}
             value={this.state.output}/>
-          <a onClick={() => this.props.onRemove(this.props.index)}>x</a>
+          {/*<a onClick={this.props.onRemove}>x</a>*/}
         </div>
       </div>
     );

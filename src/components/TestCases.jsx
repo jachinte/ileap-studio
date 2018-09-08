@@ -14,16 +14,10 @@ class TestCases extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      testCases: [
-        {
-          input: '1 2',
-          output: '3'
-        }
-      ]
+      testCases: []
     };
     this.onAddTestCase = this.onAddTestCase.bind(this);
     this.onEditTestCase = this.onEditTestCase.bind(this);
-    this.onRemoveTestCase = this.onRemoveTestCase.bind(this);
     this.onCreateZip = this.onCreateZip.bind(this);
   }
   onAddTestCase() {
@@ -58,15 +52,17 @@ class TestCases extends Component {
     const directory = path.join(os.tmpdir(), id);
     fs.mkdirSync(directory);
     testCases.forEach(tc => {
+      const inputFile = path.join(directory, `${tc.index}.in`);
+      const outputFile = path.join(directory, `${tc.index}.out`);
+      fs.writeFileSync(inputFile, tc.input);
+      fs.writeFileSync(outputFile, tc.output);
       info.test_cases[`${tc.index}`] = {
         striped_output_md5: tc.outputMd5,
-        output_size: tc.output.length,
+        output_size: fs.statSync(outputFile).size,
         output_name: `${tc.index}.out`,
         input_name: `${tc.index}.in`,
-        input_size: tc.input.length
+        input_size: fs.statSync(inputFile).size
       };
-      fs.writeFileSync(path.join(directory, `${tc.index}.in`), tc.input);
-      fs.writeFileSync(path.join(directory, `${tc.index}.out`), tc.output);
     });
     fs.writeFileSync(path.join(directory, 'info'), JSON.stringify(info, null, 2));
     dialog.showSaveDialog({ defaultPath: 'test-cases.zip' }, (filename) => {
@@ -83,12 +79,19 @@ class TestCases extends Component {
     });
   }
   render() {
+    var removeButton;
+    if (this.state.testCases.length > 0) {
+      removeButton = (
+        <a onClick={this.onRemoveTestCase.bind(this, this.state.testCases.length - 1)}>Remove last test case</a>
+      );
+    }
     return (
       <div>
         <div className="test-cases">
           {this.renderTestCases()}
         </div>
         <nav id="buttons">
+          {removeButton}
           <a onClick={this.onAddTestCase}>Add test case</a>
           <a onClick={this.onCreateZip}>Create zip file</a>
         </nav>
@@ -103,7 +106,7 @@ class TestCases extends Component {
         input={testCase.input}
         output={testCase.output}
         onEdit={this.onEditTestCase}
-        onRemove={this.onRemoveTestCase}/>
+        onRemove={this.onRemoveTestCase.bind(this, i)}/>
     );
   }
 }
