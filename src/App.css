@@ -1,0 +1,130 @@
+/* Global styles */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root,
+#app {
+  font-family: "Roboto";
+  font-size: 16px;
+  font-weight: 300;
+  height: 100%;
+}
+
+a {
+  cursor: pointer;
+}
+
+h1,
+a {
+  user-select: none;
+}
+
+#app {
+  box-sizing: border-box;
+}
+
+#app header {
+  background: white;
+  box-sizing: border-box;
+  height: 80px;
+  left: 0;
+  padding: 5px 10px;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  width: 100%;
+}
+
+#app header h1 {
+  cursor: default;
+  font-weight: 500;
+  line-height: 80px;
+}
+
+/* Test cases */
+
+.test-cases {
+  box-sizing: border-box;
+  height: calc(100% - 80px - 80px);
+  left: 0;
+  overflow-y: auto;
+  padding: 10px 40px;
+  position: fixed;
+  top: 80px;
+  width: 100%;
+}
+
+#buttons {
+  align-items: center;
+  background: white;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: 80px;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  width: 100%;
+}
+
+#buttons a {
+  background: rgb(249, 247, 247);
+  border: 1px solid transparent;
+  border-radius: 25px;
+  display: inline-block;
+  line-height: 1;
+  margin: 10px;
+  padding: 10px 30px;
+  transition: background 0.5s;
+}
+
+#buttons a:last-child {
+  margin-right: 0;
+}
+
+#buttons a:hover {
+  background: #eee;
+}
+
+.test-cases .test-case:first-child label {
+  margin-top: 0;
+}
+
+.fields,
+.labels {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.labels label {
+  box-sizing: border-box;
+  color: #999;
+  font-size: 0.7em;
+  font-weight: 500;
+  margin-top: 10px;
+  text-transform: uppercase;
+  width: calc(50% - 20px);
+}
+
+.fields .input,
+.fields .output {
+  border: 2px solid #eee;
+  box-sizing: border-box;
+  font-family: "Source Code Pro", "Consolas", "Inconsolata", "Droid Sans Mono",
+    "Monaco", monospace;
+  font-size: 1em;
+  height: 80px;
+  outline: none;
+  resize: none;
+  width: calc(50% - 20px);
+}
