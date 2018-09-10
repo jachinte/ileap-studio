@@ -44,7 +44,7 @@ class TestCases extends Component {
       test_cases: {}
     };
     const testCases = this.state.testCases.map((tc, i) => {
-      tc.index = i;
+      tc.index = i + 1; // iLeap expects natural numbers
       tc.outputMd5 = md5(tc.output);
       return tc;
     });
