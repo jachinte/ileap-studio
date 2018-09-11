@@ -36,11 +36,13 @@ class TestCase extends Component {
             className="input"
             id={`input-${random}`}
             onChange={this.onEditInput}
+            onPaste={this.onEditInput}
             value={this.state.input}/>
           <textarea
             className="output"
             id={`output-${random}`}
             onChange={this.onEditOutput}
+            onPaste={this.onEditOutput}
             value={this.state.output}/>
           {/*<a onClick={this.props.onRemove}>x</a>*/}
         </div>
