@@ -6,6 +6,7 @@ import path from 'path';
 import os from 'os';
 
 const archiver = window.require('archiver');
+const mkdirp = window.require('mkdirp');
 const remote = window.require('electron').remote;
 const dialog = remote.dialog;
 const fs = remote.require('fs');
@@ -19,6 +20,9 @@ class TestCases extends Component {
     this.onAddTestCase = this.onAddTestCase.bind(this);
     this.onEditTestCase = this.onEditTestCase.bind(this);
     this.onCreateZip = this.onCreateZip.bind(this);
+  }
+  componentDidMount() {
+    mkdirp(os.tmpdir(), (error) => console.log(error));
   }
   onAddTestCase() {
     const _testCases = this.state.testCases;
