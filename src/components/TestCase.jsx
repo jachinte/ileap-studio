@@ -9,6 +9,7 @@ class TestCase extends Component {
     };
     this.onEditInput = this.onEditInput.bind(this);
     this.onEditOutput = this.onEditOutput.bind(this);
+    this.onResize = this.onResize.bind(this);
   }
   onEditInput(event) {
     this.setState(
@@ -21,6 +22,9 @@ class TestCase extends Component {
       { output: event.target.value },
       () => this.props.onEdit(this.props.index, this.state)
     );
+  }
+  onResize(event) {
+    console.log(event.target);
   }
   render() {
     const random = Math.floor((Math.random() * 1000) + 1);
@@ -43,6 +47,7 @@ class TestCase extends Component {
             id={`output-${random}`}
             onChange={this.onEditOutput}
             onPaste={this.onEditOutput}
+            // onResize={this.onResize}
             value={this.state.output}/>
           {/*<a onClick={this.props.onRemove}>x</a>*/}
         </div>

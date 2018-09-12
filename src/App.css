@@ -125,6 +125,6 @@ a {
   font-size: 1em;
   height: 80px;
   outline: none;
-  resize: none;
+  resize: vertical;
   width: calc(50% - 20px);
 }

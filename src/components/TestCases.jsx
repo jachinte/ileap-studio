@@ -43,17 +43,13 @@ class TestCases extends Component {
     this.setState({ testCases: _testCases });
   }
   onCreateZip() {
-    const info = {
-      spj: false,
-      test_cases: {}
-    };
+    const info = { spj: false, test_cases: {} };
+    const directory = path.join(os.tmpdir(), new UUID(4).format());
     const testCases = this.state.testCases.map((tc, i) => {
       tc.index = i + 1; // iLeap expects natural numbers
       tc.outputMd5 = md5(tc.output);
       return tc;
     });
-    const id = new UUID(4).format();
-    const directory = path.join(os.tmpdir(), id);
     fs.mkdirSync(directory);
     testCases.forEach(tc => {
       const inputFile = path.join(directory, `${tc.index}.in`);
