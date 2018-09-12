@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TestCases from './components/TestCases';
+import Problem from './components/Problem';
 import './App.css';
 
 class App extends Component {
@@ -9,7 +9,7 @@ class App extends Component {
         <header>
           <h1>iLeap</h1>
         </header>
-        <TestCases />
+        <Problem />
       </div>
     );
   }

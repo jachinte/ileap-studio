@@ -31,11 +31,13 @@ class TestCase extends Component {
     return (
       <div className="test-case">
         <div className="labels">
+          <span style={{visibility: 'hidden'}}>{this.props.index + 1}.</span>
           <label htmlFor={`input-${random}`}>Input</label>
           <label htmlFor={`output-${random}`}>Output</label>
           {/*<a style={{visibility: 'hidden'}}>x</a>*/}
         </div>
         <div className="fields">
+          <span>{this.props.index + 1}.</span>
           <textarea
             className="input"
             id={`input-${random}`}

@@ -20,6 +20,8 @@
     "pure-uuid": "^1.5.4",
     "react": "16.4.0",
     "react-dom": "16.4.0",
+    "react-monaco-editor": "^0.18.0",
+    "react-tabs": "^2.3.0",
     "typeface-roboto": "^0.0.54"
   },
   "devDependencies": {
