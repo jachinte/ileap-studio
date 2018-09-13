@@ -3,11 +3,13 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import MonacoEditor from 'react-monaco-editor';
 import TestCases from './TestCases';
+import Metadata from './Metadata';
 import md5 from 'md5';
 import UUID from 'pure-uuid';
 import path from 'path';
 import os from 'os';
 
+const mkdirp = window.require('mkdirp');
 const archiver = window.require('archiver');
 const remote = window.require('electron').remote;
 const dialog = remote.dialog;
@@ -26,68 +28,72 @@ class Problem extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      metadata: {
+        id: 'A1',
+        title: '',
+        description: '',
+        inputDescription: '',
+        outputDescription: '',
+        tags: [],
+        hint: '',
+        main: './basic.c'
+      },
       sourceCode: '',
       testCases: [],
       windowHeight: undefined,
       windowWidth: undefined,
     };
-    this.onResize = this.onResize.bind(this);
-    this.onEditorChange = this.onEditorChange.bind(this);
-    this.editorDidMount = this.editorDidMount.bind(this);
-    this.onAddTestCase = this.onAddTestCase.bind(this);
-    this.onEditTestCase = this.onEditTestCase.bind(this);
-    this.onRemoveTestCase = this.onRemoveTestCase.bind(this);
-    this.onSave = this.onSave.bind(this);
   }
-  componentDidMount() {
+  componentDidMount = () => {
+    this.onAddTestCase();
     this.onResize();
     window.addEventListener('resize', this.onResize);
-    import('./basic.c')
+    import(`${this.state.metadata.main}`)
       .then(file => fetch(file))
       .then(response => response.text())
       .then(text => this.setState({ sourceCode: text }));
   }
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     window.removeEventListener('resize', this.onResize);
   }
-  onResize() {
+  onResize = () => {
     this.setState({
       windowHeight: window.innerHeight,
       windowWidth: window.innerWidth
     });
   }
-  onEditorChange(newValue, e) {
-    this.setState({ sourceCode: newValue });
+  onMetadataChange = (metadata) => {
+    this.setState({ metadata });
   }
-  editorDidMount(editor, monaco) {
-    editor.focus();
-  }
-  onAddTestCase() {
+  onAddTestCase = () => {
     const _testCases = this.state.testCases;
     _testCases.push({
       input: '',
-      output: ''
+      output: '',
+      uuid: new UUID(1).format()
     });
     this.setState({ testCases: _testCases });
   }
-  onEditTestCase(index, testCase) {
+  onEditTestCase = (index, testCase) => {
     const _testCases = this.state.testCases;
     _testCases[index] = testCase;
     this.setState({ testCases: _testCases });
   }
-  onRemoveTestCase(index) {
+  onRemoveTestCase = (index) => {
     const _testCases = this.state.testCases;
     _testCases.splice(index, 1);
     this.setState({ testCases: _testCases });
   }
-  onSave() {
+  onSave = () => {
     const info = { spj: false, test_cases: {} };
     const directory = path.join(os.tmpdir(), new UUID(4).format());
-    const testCases = this.state.testCases.map((tc, i) => {
-      tc.index = i + 1; // iLeap expects natural numbers
-      tc.outputMd5 = md5(tc.output);
-      return tc;
-    });
+    const testCases = this.state.testCases
+      .filter((tc) => !tc.isSample)
+      .map((tc, i) => {
+        tc.index = i + 1; // iLeap expects natural numbers
+        tc.outputMd5 = md5(tc.output);
+        return tc;
+      });
     fs.mkdirSync(directory);
     testCases.forEach(tc => {
       const inputFile = path.join(directory, `${tc.index}.in`);
@@ -103,11 +109,20 @@ class Problem extends Component {
       };
     });
     fs.writeFileSync(path.join(directory, 'info'), JSON.stringify(info, null, 2));
-    dialog.showSaveDialog({ defaultPath: 'test-cases.zip' }, (filename) => {
-      if (filename === undefined){
+    const options = { properties: ['openDirectory', 'createDirectory', 'promptToCreate'] };
+    dialog.showOpenDialog(options, (dir) => {
+      if (dir === undefined){
         return;
       }
-      const output = fs.createWriteStream(filename);
+      fs.writeFileSync(
+        path.join(dir[0], 'problem.json'),
+        JSON.stringify(this.state.metadata, null, 2)
+      );
+      fs.writeFileSync(
+        path.join(dir[0], 'main.c'),
+        this.state.sourceCode
+      );
+      const output = fs.createWriteStream(path.join(dir[0], 'test-cases.zip'));
       const archive = archiver('zip', { zlib: { level: 9 } });
       archive.on('error', (error) => alert(`Unexpected error: ${error}`));
       archive.on('end', () => alert('The file was exported successfully.'));
@@ -121,9 +136,16 @@ class Problem extends Component {
       <div>
         <Tabs id="tabs">
           <TabList>
+            <Tab>Metadata</Tab>
             <Tab>Source code</Tab>
             <Tab>Test cases</Tab>
           </TabList>
+          <TabPanel>
+            <Metadata
+              data={this.state.metadata}
+              onChange={this.onMetadataChange}
+              onSave={this.onSave}/>
+          </TabPanel>
           <TabPanel>
             <MonacoEditor
               height={this.state.windowHeight - 200}
@@ -131,8 +153,8 @@ class Problem extends Component {
               theme="vs-light"
               value={this.state.sourceCode}
               options={options}
-              onChange={this.onEditorChange}
-              editorDidMount={this.editorDidMount}/>
+              onChange={(value) => this.setState({ sourceCode: value })}
+              editorDidMount={(editor, monaco) => editor.focus()}/>
               <nav className="buttons">
                 <a onClick={this.onSave}>Save</a>
               </nav>
@@ -140,6 +162,7 @@ class Problem extends Component {
           <TabPanel className="test-cases-panel">
             <TestCases
               testCases={this.state.testCases}
+              onDidMount={() => mkdirp(os.tmpdir())}
               onAddTestCase={this.onAddTestCase}
               onEditTestCase={this.onEditTestCase}
               onRemoveTestCase={this.onRemoveTestCase}
