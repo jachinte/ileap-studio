@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import Problem from './components/Problem';
+import { HashRouter, Route } from 'react-router-dom';
+import Welcome from './components/Welcome';
+import EditProblem from './components/EditProblem';
 import './App.css';
 
 class App extends Component {
   render() {
     return (
-      <div id="app">
-        <header>
-          <h1>iLeap</h1>
-        </header>
-        <Problem />
-      </div>
+      <HashRouter>
+        <div>
+          <Route exact path="/" component={ Welcome }/>
+          <Route path="/edit" component={ EditProblem }/>
+        </div>
+      </HashRouter>
     );
   }
 }

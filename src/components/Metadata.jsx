@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
+
 class Metadata extends Component {
   onFieldChange = (property, value) => {
     const data = this.props.data;
@@ -53,9 +54,6 @@ class Metadata extends Component {
             defaultValue={this.props.data.hint}
           />
         </div>
-        <nav className="buttons">
-          <a onClick={this.props.onSave}>Save</a>
-        </nav>
       </div>
     );
   }

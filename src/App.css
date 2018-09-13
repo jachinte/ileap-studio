@@ -98,10 +98,12 @@ a {
   background: rgb(249, 247, 247);
   border: 1px solid transparent;
   border-radius: 25px;
+  color: black;
   display: inline-block;
   line-height: 1;
   margin: 10px;
   padding: 10px 30px;
+  text-decoration: none;
   transition: background 0.5s;
 }
 
@@ -111,6 +113,19 @@ a {
 
 .buttons a:hover {
   background: #eee;
+}
+
+.buttons a > span {
+  margin-right: 8px;
+}
+
+.buttons a.primary {
+  color: white;
+  background: rgb(75, 192, 255);
+}
+
+.buttons a.primary:hover {
+  background: rgb(48, 168, 232);
 }
 
 .test-cases .test-case:first-child label {
@@ -145,7 +160,7 @@ a {
   font-size: 1em;
   height: 80px;
   outline: none;
-  resize: vertical;
+  resize: none;
   width: calc(50% - 34px);
 }
 
