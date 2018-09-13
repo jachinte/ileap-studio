@@ -1,13 +1,13 @@
 {
-  "name": "ileap-tc-creation",
-  "productName": "iLeap Test Cases",
-  "description": "iLeap test case creation",
+  "name": "ileap-studio",
+  "productName": "iLeap Studio",
+  "description": "iLeap Studio",
   "author": {
     "name": "Miguel Jiménez",
     "email": "miguel@uvic.ca",
     "url": "https://migueljimenez.co"
   },
-  "repository": "https://github.com/jachinte/ileap-test-cases",
+  "repository": "https://github.com/jachinte/ileap-studio",
   "license": "MIT",
   "version": "0.1.0",
   "dependencies": {
@@ -16,6 +16,7 @@
     "draft-js": "^0.10.5",
     "electron-is-dev": "0.3.0",
     "electron-log": "^2.2.6",
+    "electron-updater": "^3.1.2",
     "extract-zip": "^1.6.7",
     "md5": "^2.2.1",
     "mkdirp": "^0.5.1",
@@ -38,7 +39,13 @@
     "wait-on": "2.1.0"
   },
   "build": {
-    "appId": "co.migueljimenez.ileap.tc",
+    "appId": "co.migueljimenez.ileap-studio",
+    "publish": {
+      "provider": "github",
+      "repo": "ileap-studio",
+      "owner": "jachinte",
+      "vPrefixedTagName": false
+    },
     "appImage": {
       "systemIntegration": "doNotAsk"
     },
