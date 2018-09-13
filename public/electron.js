@@ -3,6 +3,8 @@ const { app, BrowserWindow, Menu } = electron;
 
 const path = require("path");
 const isDev = require("electron-is-dev");
+const { autoUpdater } = require("electron-updater");
+autoUpdater.checkForUpdatesAndNotify();
 
 let mainWindow;
 

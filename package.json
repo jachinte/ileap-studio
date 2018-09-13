@@ -9,7 +9,7 @@
   },
   "repository": "https://github.com/jachinte/ileap-studio",
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "dependencies": {
     "archiver": "^3.0.0",
     "cross-env": "5.1.6",
@@ -72,10 +72,8 @@
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
     "electron-build": "electron-builder",
-    "electron-build-all": "electron-builder -mwl",
-    "release": "yarn react-build && electron-builder --publish=always",
+    "release": "yarn react-build && electron-builder -mwl --publish=never",
     "build": "yarn react-build && yarn electron-build",
-    "build-all": "yarn react-build && yarn electron-build-all",
     "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\""
   }
 }
