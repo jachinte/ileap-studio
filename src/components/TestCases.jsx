@@ -24,10 +24,7 @@ class TestCases extends Component {
       <TestCase
         key={testCase.uuid}
         index={i}
-        uuid={testCase.uuid}
-        isSample={false}
-        input={testCase.input}
-        output={testCase.output}
+        data={testCase}
         onEdit={this.props.onEditTestCase}
         onRemove={this.props.onRemoveTestCase}/>
     );

@@ -29,12 +29,14 @@ class Problem extends Component {
     super(props);
     this.state = {
       metadata: {
-        id: 'A1',
+        id: '',
         title: '',
         description: '',
         inputDescription: '',
         outputDescription: '',
-        tags: [],
+        sampleInput: '',
+        sampleOutput: '',
+        tags: '',
         hint: '',
         main: './basic.c'
       },
@@ -45,7 +47,7 @@ class Problem extends Component {
     };
   }
   componentDidMount = () => {
-    this.onAddTestCase();
+    this.onAddTestCase(true);
     this.onResize();
     window.addEventListener('resize', this.onResize);
     import(`${this.state.metadata.main}`)
@@ -65,24 +67,29 @@ class Problem extends Component {
   onMetadataChange = (metadata) => {
     this.setState({ metadata });
   }
-  onAddTestCase = () => {
-    const _testCases = this.state.testCases;
-    _testCases.push({
+  onAddTestCase = (isSample = false) => {
+    const testCases = this.state.testCases;
+    testCases.push({
       input: '',
       output: '',
+      isSample: (isSample || testCases.length === 0),
       uuid: new UUID(1).format()
     });
-    this.setState({ testCases: _testCases });
+    this.setState({ testCases });
   }
   onEditTestCase = (index, testCase) => {
-    const _testCases = this.state.testCases;
-    _testCases[index] = testCase;
-    this.setState({ testCases: _testCases });
+    const testCases = this.state.testCases;
+    testCases[index] = testCase;
+    this.setState({ testCases });
   }
   onRemoveTestCase = (index) => {
-    const _testCases = this.state.testCases;
-    _testCases.splice(index, 1);
-    this.setState({ testCases: _testCases });
+    const testCases = this.state.testCases;
+    const wasSample = testCases[index].isSample;
+    testCases.splice(index, 1);
+    if (wasSample && testCases.length > 0) {
+      testCases[0].isSample = true;
+    }
+    this.setState({ testCases });
   }
   onSave = () => {
     const info = { spj: false, test_cases: {} };
@@ -94,6 +101,10 @@ class Problem extends Component {
         tc.outputMd5 = md5(tc.output);
         return tc;
       });
+    const sample = this.state.testCases.filter((tc) => tc.isSample)[0];
+    const metadata = this.state.metadata;
+    metadata.sampleInput = sample.input;
+    metadata.sampleOutput = sample.output;
     fs.mkdirSync(directory);
     testCases.forEach(tc => {
       const inputFile = path.join(directory, `${tc.index}.in`);
@@ -116,7 +127,7 @@ class Problem extends Component {
       }
       fs.writeFileSync(
         path.join(dir[0], 'problem.json'),
-        JSON.stringify(this.state.metadata, null, 2)
+        JSON.stringify(metadata, null, 2)
       );
       fs.writeFileSync(
         path.join(dir[0], 'main.c'),
@@ -125,7 +136,6 @@ class Problem extends Component {
       const output = fs.createWriteStream(path.join(dir[0], 'test-cases.zip'));
       const archive = archiver('zip', { zlib: { level: 9 } });
       archive.on('error', (error) => alert(`Unexpected error: ${error}`));
-      archive.on('end', () => alert('The file was exported successfully.'));
       archive.pipe(output);
       archive.directory(directory, false);
       archive.finalize();
@@ -163,7 +173,7 @@ class Problem extends Component {
             <TestCases
               testCases={this.state.testCases}
               onDidMount={() => mkdirp(os.tmpdir())}
-              onAddTestCase={this.onAddTestCase}
+              onAddTestCase={this.onAddTestCase.bind(this, false)}
               onEditTestCase={this.onEditTestCase}
               onRemoveTestCase={this.onRemoveTestCase}
               onSave={this.onSave}/>

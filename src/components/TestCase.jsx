@@ -3,39 +3,20 @@ import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap.css';
 
 class TestCase extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      uuid: props.uuid,
-      isSample: props.isSample,
-      input: props.input,
-      output: props.output,
-    };
-    this.onSampleChange = this.onSampleChange.bind(this);
-    this.onEditInput = this.onEditInput.bind(this);
-    this.onEditOutput = this.onEditOutput.bind(this);
-    this.onResize = this.onResize.bind(this);
+  onSampleChange = (event) => {
+    const data = this.props.data;
+    data.isSample = event.target.checked;
+    this.props.onEdit(this.props.index, data);
   }
-  onSampleChange(event) {
-    this.setState(
-      { isSample: event.target.value },
-      () => this.props.onEdit(this.props.index, this.state)
-    );
+  onEditInput = (event) => {
+    const data = this.props.data;
+    data.input = event.target.value;
+    this.props.onEdit(this.props.index, data);
   }
-  onEditInput(event) {
-    this.setState(
-      { input: event.target.value },
-      () => this.props.onEdit(this.props.index, this.state)
-    );
-  }
-  onEditOutput(event) {
-    this.setState(
-      { output: event.target.value },
-      () => this.props.onEdit(this.props.index, this.state)
-    );
-  }
-  onResize(event) {
-    console.log(event.target);
+  onEditOutput = (event) => {
+    const data = this.props.data;
+    data.output = event.target.value;
+    this.props.onEdit(this.props.index, data);
   }
   render() {
     const hidden = {visibility: 'hidden'};
@@ -57,19 +38,18 @@ class TestCase extends Component {
             id={`input-${this.props.index}`}
             onChange={this.onEditInput}
             onPaste={this.onEditInput}
-            value={this.state.input}/>
+            value={this.props.data.input}/>
           <textarea
             className="output"
             id={`output-${this.props.index}`}
             onChange={this.onEditOutput}
             onPaste={this.onEditOutput}
-            // onResize={this.onResize}
-            value={this.state.output}/>
-          <Tooltip placement="bottom" overlay="Mark as sample">
+            value={this.props.data.output}/>
+          <Tooltip placement="bottom" overlay="Mark as sample input / output">
             <input
-              type="checkbox"
-              name={`sample-${this.props.index}`}
-              defaultChecked={this.state.isSample}
+              type="radio"
+              name="sample"
+              checked={this.props.data.isSample}
               onChange={this.onSampleChange}/>
           </Tooltip>
           <Tooltip placement="top" overlay="Remove">

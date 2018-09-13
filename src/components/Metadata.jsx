@@ -1,24 +1,57 @@
 import React, { Component } from 'react';
-
+import TextareaAutosize from 'react-textarea-autosize';
 class Metadata extends Component {
+  onFieldChange = (property, value) => {
+    const data = this.props.data;
+    data[property] = value;
+    this.props.onChange(data);
+  }
   render() {
     return (
       <div className="metadata">
         <div className="form">
           <label htmlFor="id">Id</label>
-          <input type="text" name="id" defaultValue={this.props.data.id} />
+          <input
+            type="text"
+            name="id"
+            onChange={(e) => this.onFieldChange("id", e.target.value)}
+            defaultValue={this.props.data.id}/>
           <label htmlFor="title">Title</label>
-          <input type="text" name="title" defaultValue={this.props.data.title} />
-          <label htmlFor="description">Description</label>
-          <textarea type="text" id="description" defaultValue={this.props.data.description} />
-          <label htmlFor="inputDescription">Input Description</label>
-          <textarea type="text" id="inputDescription" defaultValue={this.props.data.inputDescription} />
-          <label htmlFor="outputDescription">Output Description</label>
-          <textarea type="text" id="outputDescription" defaultValue={this.props.data.outputDescription} />
-          <label htmlFor="tags">Tags</label>
-          <input type="text" name="tags" defaultValue={this.props.data.tags.join(", ")} />
-          <label htmlFor="hint">Hint</label>
-          <textarea type="text" id="hint" defaultValue={this.props.data.hint} />
+          <input
+            type="text"
+            name="title"
+            onChange={(e) => this.onFieldChange("title", e.target.value)}
+            defaultValue={this.props.data.title}/>
+          <label>Description</label>
+          <TextareaAutosize
+            onChange={(e) => this.onFieldChange("description", e.target.value)}
+            minRows={3}
+            defaultValue={this.props.data.description}
+          />
+          <label>Input Description</label>
+          <TextareaAutosize
+            onChange={(e) => this.onFieldChange("inputDescription", e.target.value)}
+            minRows={3}
+            defaultValue={this.props.data.inputDescription}
+          />
+          <label>Output Description</label>
+          <TextareaAutosize
+            onChange={(e) => this.onFieldChange("outputDescription", e.target.value)}
+            minRows={3}
+            defaultValue={this.props.data.outputDescription}
+          />
+          <label htmlFor="tags">Tags (comma separated)</label>
+          <input
+            type="text"
+            name="tags"
+            onChange={(e) => this.onFieldChange("tags", e.target.value)}
+            defaultValue={this.props.data.tags}/>
+          <label>Hint</label>
+          <TextareaAutosize
+            onChange={(e) => this.onFieldChange("hint", e.target.value)}
+            minRows={3}
+            defaultValue={this.props.data.hint}
+          />
         </div>
         <nav className="buttons">
           <a onClick={this.props.onSave}>Save</a>
