@@ -132,27 +132,32 @@ a {
   margin-top: 0;
 }
 
-.fields,
-.labels {
+.test-case {
   align-items: center;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
+  position: relative;
   width: 100%;
 }
 
-.labels label {
-  box-sizing: border-box;
+.test-case .field-wrapper {
+  flex: unset !important;
+  position: relative !important;
+  width: calc(100% - 100px);
+}
+
+.field label {
+  display: block;
   font-size: 0.7em;
   font-weight: 500;
   margin-top: 10px;
   text-transform: uppercase;
-  width: calc(50% - 34px);
 }
 
-.fields .input,
-.fields .output {
+.field .input,
+.field .output {
   border: 2px solid #eee;
   box-sizing: border-box;
   font-family: "Source Code Pro", "Consolas", "Inconsolata", "Droid Sans Mono",
@@ -161,21 +166,23 @@ a {
   height: 80px;
   outline: none;
   resize: none;
-  width: calc(50% - 34px);
+  width: calc(100% - 5px);
 }
 
-.fields > span,
-.labels > span {
+.field .output {
+  float: right;
+}
+
+.test-case > span {
   font-size: 0.8em;
   font-weight: 400;
 }
 
-.fields > a,
-.labels > a {
+.test-case > a {
   margin-right: 10px;
 }
 
-.fields input {
+.test-case input {
   cursor: pointer;
 }
 
@@ -225,4 +232,27 @@ a {
   padding: 8px;
   margin: 10px 0 30px 0;
   width: 100%;
+}
+
+/* Test case - Resizer */
+
+.Resizer {
+  background: transparent;
+  background-clip: padding-box;
+  box-sizing: border-box;
+  opacity: 0.2;
+  z-index: 1;
+}
+
+.Resizer.vertical {
+  cursor: col-resize;
+  margin: 0 -5px;
+  width: 5px;
+}
+
+.Resizer.disabled {
+  cursor: not-allowed;
+}
+.Resizer.disabled:hover {
+  border-color: transparent;
 }

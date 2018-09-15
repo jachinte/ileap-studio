@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SplitPane from 'react-split-pane';
 import TextareaAutosize from 'react-textarea-autosize';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap.css';
@@ -44,48 +45,49 @@ class TestCase extends Component {
     const hidden = {visibility: 'hidden'};
     return (
       <div className="test-case">
-        <div className="labels">
-          <span style={hidden}>{this.props.index + 1}.</span>
-          <label htmlFor={`input-${this.props.index}`}>Input</label>
-          <label htmlFor={`output-${this.props.index}`}>Output</label>
-          <input type="radio" style={hidden}/>
-          <a style={hidden}>
+        <span>{this.props.index + 1}.</span>
+        <SplitPane
+          className="field-wrapper"
+          split="vertical"
+          minSize={50}
+          defaultSize="50%">
+          <div className="field">
+            <label htmlFor={`input-${this.props.index}`}>Input</label>
+            <TextareaAutosize
+              id={`input-${this.props.index}`}
+              className="input"
+              minRows={this.state.inputHeight}
+              maxRows={15}
+              defaultValue={this.props.data.input}
+              onChange={this.onEditInput}
+              onHeightChange={this.onInputHeightChange}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor={`output-${this.props.index}`}>Output</label>
+            <TextareaAutosize
+              id={`output-${this.props.index}`}
+              className="output"
+              minRows={this.state.outputHeight}
+              maxRows={15}
+              defaultValue={this.props.data.output}
+              onChange={this.onEditOutput}
+              onHeightChange={this.onOutputHeightChange}
+            />
+          </div>
+        </SplitPane>
+        <Tooltip placement="bottom" overlay="Mark as sample input / output">
+          <input
+            type="checkbox"
+            name="sample"
+            checked={this.props.data.isSample}
+            onChange={this.onSampleChange}/>
+        </Tooltip>
+        <Tooltip placement="top" overlay="Remove">
+          <a onClick={() => this.props.onRemove(this.props.index)}>
             <span role="img" aria-label="Remove this test case">✖️</span>
           </a>
-        </div>
-        <div className="fields">
-          <span>{this.props.index + 1}.</span>
-          <TextareaAutosize
-            id={`input-${this.props.index}`}
-            className="input"
-            minRows={this.state.inputHeight}
-            maxRows={15}
-            defaultValue={this.props.data.input}
-            onChange={this.onEditInput}
-            onHeightChange={this.onInputHeightChange}
-          />
-          <TextareaAutosize
-            id={`output-${this.props.index}`}
-            className="output"
-            minRows={this.state.outputHeight}
-            maxRows={15}
-            defaultValue={this.props.data.output}
-            onChange={this.onEditOutput}
-            onHeightChange={this.onOutputHeightChange}
-          />
-          <Tooltip placement="bottom" overlay="Mark as sample input / output">
-            <input
-              type="radio"
-              name="sample"
-              checked={this.props.data.isSample}
-              onChange={this.onSampleChange}/>
-          </Tooltip>
-          <Tooltip placement="top" overlay="Remove">
-            <a onClick={() => this.props.onRemove(this.props.index)}>
-              <span role="img" aria-label="Remove this test case">✖️</span>
-            </a>
-          </Tooltip>
-        </div>
+        </Tooltip>
       </div>
     );
   }
