@@ -17,11 +17,36 @@ export default function Save(_testCases, metadata, sourceCode) {
     return tc;
   });
   metadata.main = "./main.c";
-  const sample = _testCases.filter(tc => tc.isSample)[0];
-  if (sample) {
-    metadata.sampleInput = sample.input;
-    metadata.sampleOutput = sample.output;
-  }
+  metadata.tags = metadata.tags.replace(" ", "").split(",");
+  metadata.samples = _testCases
+    .filter(tc => tc.isSample)
+    .map(tc => ({ input: tc.input, output: tc.output }));
+  // compatibility with iLeap import feature
+  metadata.description = {
+    format: "html",
+    value: metadata.description
+  };
+  metadata.input_description = {
+    format: "html",
+    value: metadata.input_description
+  };
+  metadata.output_description = {
+    format: "html",
+    value: metadata.output_description
+  };
+  metadata.hint = {
+    format: "html",
+    value: metadata.hint
+  };
+  metadata.test_case_score = null;
+  metadata.time_limit = 1000;
+  metadata.memory_limit = 256;
+  metadata.template = {};
+  metadata.spj = null;
+  metadata.rule_type = "ACM";
+  metadata.source = "iLeap http://ileap.csc.uvic.ca";
+  metadata.answers = [];
+  // the rest
   fs.mkdirSync(directory);
   testCases.forEach(tc => {
     const inputFile = path.join(directory, `${tc.index}.in`);

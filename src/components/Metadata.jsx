@@ -15,8 +15,8 @@ class Metadata extends Component {
           <input
             type="text"
             name="id"
-            onChange={(e) => this.onFieldChange("id", e.target.value)}
-            defaultValue={this.props.data.id}/>
+            onChange={(e) => this.onFieldChange("display_id", e.target.value)}
+            defaultValue={this.props.data.display_id}/>
           <label htmlFor="title">Title</label>
           <input
             type="text"
@@ -31,17 +31,17 @@ class Metadata extends Component {
           />
           <label>Input Description</label>
           <TextareaAutosize
-            onChange={(e) => this.onFieldChange("inputDescription", e.target.value)}
+            onChange={(e) => this.onFieldChange("input_description", e.target.value)}
             minRows={3}
-            defaultValue={this.props.data.inputDescription}
+            defaultValue={this.props.data.input_description}
           />
           <label>Output Description</label>
           <TextareaAutosize
-            onChange={(e) => this.onFieldChange("outputDescription", e.target.value)}
+            onChange={(e) => this.onFieldChange("output_description", e.target.value)}
             minRows={3}
-            defaultValue={this.props.data.outputDescription}
+            defaultValue={this.props.data.output_description}
           />
-          <label htmlFor="tags">Tags (comma separated)</label>
+          <label htmlFor="tags">Tags (comma separated, no spaces)</label>
           <input
             type="text"
             name="tags"

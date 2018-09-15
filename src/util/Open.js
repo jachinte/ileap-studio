@@ -30,15 +30,20 @@ export default function Open(callback) {
       fs.readFileSync(path.join(directory[0], "problem.json"), "utf8")
     );
     problem.main = path.join(directory[0], "main.c");
+    problem.description = problem.description.value;
+    problem.input_description = problem.input_description.value;
+    problem.output_description = problem.output_description.value;
+    problem.tags = problem.tags.join(",");
+    problem.hint = problem.hint.value;
     extract(path.join(directory[0], "test-cases.zip"), { dir: tmp }, error => {
       if (error) {
         alert(`Unexpected error: ${error}`);
         return;
       }
       const testCases = [];
-      if (problem.sampleInput || problem.sampleOutput) {
-        testCases.push(tc(problem.sampleInput, problem.sampleOutput, true));
-      }
+      problem.samples.forEach(data => {
+        testCases.push(tc(data.input, data.output, true));
+      });
       fs.readdir(tmp, (error, files) => {
         const seen = {};
         files

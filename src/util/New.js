@@ -13,15 +13,14 @@ export default function New(callback) {
     const filename = path.join(tmp, "basic.c");
     fs.writeFileSync(filename, code);
     const metadata = {
-      id: "",
+      display_id: "",
       title: "",
-      description: "",
-      inputDescription: "",
-      outputDescription: "",
-      sampleInput: "",
-      sampleOutput: "",
+      description: "<p></p>",
+      input_description: "<p></p>",
+      output_description: "<p></p>",
+      samples: [],
       tags: "",
-      hint: "",
+      hint: "<pre><code></code></pre>",
       main: filename
     };
     const testCases = [];
