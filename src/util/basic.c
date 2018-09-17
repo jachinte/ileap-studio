@@ -4,4 +4,4 @@
 int main(void) {
     // Your code
     return EXIT_SUCCESS;
-}
+}// main
