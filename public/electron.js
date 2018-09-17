@@ -10,7 +10,7 @@ autoUpdater.checkForUpdatesAndNotify();
 let mainWindow;
 
 function createWindow() {
-  mainWindow = new BrowserWindow({ width: 900, height: 600 });
+  mainWindow = new BrowserWindow({ width: 1024, height: 660 });
   mainWindow.loadURL(
     isDev
       ? "http://localhost:3000"
