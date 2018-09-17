@@ -1,6 +1,7 @@
 const electron = require("electron");
-const { app, BrowserWindow, Menu } = electron;
+const { app, dialog, BrowserWindow, Menu } = electron;
 
+var info = require('../package.json');
 const path = require("path");
 const isDev = require("electron-is-dev");
 const { autoUpdater } = require("electron-updater");
@@ -27,6 +28,20 @@ function createWindow() {
           click: function() {
             app.quit();
           }
+        },
+        {
+          label: "About",
+          click: function() {
+            dialog.showMessageBox(mainWindow, {
+              type: "info",
+              buttons: ["OK"],
+              title: "iLeap Studio",
+              message: "About",
+              detail: `You are running iLeap Studio v${info.version}.`
+            }, resp => {
+              console.log(resp);
+            });
+          }
         }
       ]
     },
@@ -47,7 +62,7 @@ function createWindow() {
       ]
     }
   ];
-  if (!isDev) Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  if (isDev) Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
 app.on("ready", createWindow);
