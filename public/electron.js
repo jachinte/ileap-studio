@@ -62,7 +62,7 @@ function createWindow() {
       ]
     }
   ];
-  if (isDev) Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  if (!isDev) Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
 app.on("ready", createWindow);
