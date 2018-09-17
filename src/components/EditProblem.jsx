@@ -89,7 +89,7 @@ class EditProblem extends Component {
     } else {
       // Not working: save new project
       const options = {
-        defaultPath: 'problem.zip',
+        defaultPath: `${metadata.display_id}.zip`,
         filters: [
           { name: 'Zip files', extensions: ['zip'] }
         ]
@@ -105,7 +105,7 @@ class EditProblem extends Component {
     return (
       <div id="app">
         <header>
-          <h1>iLeap</h1>
+          <h1>iLeap Studio</h1>
         </header>
         <Tabs id="tabs">
           <TabList>
