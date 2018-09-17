@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import SplitPane from 'react-split-pane';
 import TextareaAutosize from 'react-textarea-autosize';
 import Tooltip from 'rc-tooltip';
-import 'rc-tooltip/assets/bootstrap.css';
 
 class TestCase extends Component {
   constructor(props) {
