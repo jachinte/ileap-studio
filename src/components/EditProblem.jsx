@@ -9,6 +9,7 @@ import Metadata from './Metadata';
 import UUID from "pure-uuid";
 
 const remote = window.require("electron").remote;
+const dialog = remote.dialog;
 const fs = remote.require("fs");
 
 const options = {
@@ -83,7 +84,22 @@ class EditProblem extends Component {
   }
   onSave = () => {
     const {testCases, metadata, sourceCode} = this.state;
-    Save(testCases, metadata, sourceCode);
+    if (window.saveTo) {
+      Save(testCases, metadata, sourceCode, window.saveTo);
+    } else {
+      // Not working: save new project
+      const options = {
+        defaultPath: 'problem.zip',
+        filters: [
+          { name: 'Zip files', extensions: ['zip'] }
+        ]
+      };
+      dialog.showSaveDialog(options, dir => {
+        if (dir !== undefined) {
+          Save(testCases, metadata, sourceCode, dir);
+        }
+      });
+    }
   }
   render() {
     return (

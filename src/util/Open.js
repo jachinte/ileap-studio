@@ -18,33 +18,34 @@ const tc = (input, output, isSample) => {
 };
 
 export default function Open(callback) {
-  const options = { properties: ["openDirectory"] };
-  dialog.showOpenDialog(options, directory => {
-    if (directory === undefined) {
+  const options = { properties: ["openFile"] };
+  dialog.showOpenDialog(options, projectFile => {
+    if (projectFile === undefined) {
       return;
     }
-    window.saveTo = directory[0];
+    window.saveTo = projectFile[0];
     const tmp = path.join(os.tmpdir(), new UUID(4).format());
     mkdirp(tmp);
-    const problem = JSON.parse(
-      fs.readFileSync(path.join(directory[0], "problem.json"), "utf8")
-    );
-    problem.main = path.join(directory[0], "main.c");
-    problem.description = problem.description.value;
-    problem.input_description = problem.input_description.value;
-    problem.output_description = problem.output_description.value;
-    problem.tags = problem.tags.join(",");
-    problem.hint = problem.hint.value;
-    extract(path.join(directory[0], "test-cases.zip"), { dir: tmp }, error => {
+    extract(projectFile[0], { dir: tmp }, error => {
       if (error) {
         alert(`Unexpected error: ${error}`);
         return;
       }
+      const problem = JSON.parse(
+        fs.readFileSync(path.join(tmp, "1", "problem.json"), "utf8")
+      );
+      problem.main = path.join(tmp, "1", "main.c");
+      problem.description = problem.description.value;
+      problem.input_description = problem.input_description.value;
+      problem.output_description = problem.output_description.value;
+      problem.tags = problem.tags.join(",");
+      problem.hint = problem.hint.value;
       const testCases = [];
+      const testcaseDir = path.join(tmp, "1", "testcase");
       problem.samples.forEach(data => {
         testCases.push(tc(data.input, data.output, true));
       });
-      fs.readdir(tmp, (error, files) => {
+      fs.readdir(testcaseDir, (error, files) => {
         const seen = {};
         files
           .filter(file => file.endsWith(".in") || file.endsWith(".out"))
@@ -55,8 +56,8 @@ export default function Open(callback) {
           .forEach(file => {
             testCases.push(
               tc(
-                fs.readFileSync(path.join(tmp, `${file}.in`), "utf8"),
-                fs.readFileSync(path.join(tmp, `${file}.out`), "utf8"),
+                fs.readFileSync(path.join(testcaseDir, `${file}.in`), "utf8"),
+                fs.readFileSync(path.join(testcaseDir, `${file}.out`), "utf8"),
                 false
               )
             );

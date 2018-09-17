@@ -5,52 +5,51 @@ import os from "os";
 
 const archiver = window.require("archiver");
 const remote = window.require("electron").remote;
-const dialog = remote.dialog;
 const fs = remote.require("fs");
 
-export default function Save(_testCases, metadata, sourceCode) {
+export default function Save(_testCases, metadata, sourceCode, projectFile) {
   const info = { spj: false, test_cases: {} };
-  const directory = path.join(os.tmpdir(), new UUID(4).format());
+  const tmpDir = path.join(os.tmpdir(), new UUID(1).format());
+  const projectDir = path.join(tmpDir, "1");
+  const testCaseDir = path.join(projectDir, "testcase");
+  fs.mkdirSync(tmpDir);
+  fs.mkdirSync(projectDir);
+  fs.mkdirSync(testCaseDir);
   const testCases = _testCases.filter(tc => !tc.isSample).map((tc, i) => {
     tc.index = i + 1; // iLeap expects natural numbers
     tc.outputMd5 = md5(tc.output);
     return tc;
   });
-  metadata.main = "./main.c";
-  metadata.tags = metadata.tags.replace(" ", "").split(",");
-  metadata.samples = _testCases
-    .filter(tc => tc.isSample)
-    .map(tc => ({ input: tc.input, output: tc.output }));
+  const problem = JSON.parse(JSON.stringify(metadata));
+  problem.main = "./main.c";
+  problem.tags = problem.tags.replace(" ", "").split(",");
+  problem.samples = _testCases.filter(tc => tc.isSample).map(tc => ({
+    input: tc.input,
+    output: tc.output
+  }));
   // compatibility with iLeap import feature
-  metadata.description = {
+  problem.description = { format: "html", value: problem.description };
+  problem.input_description = {
     format: "html",
-    value: metadata.description
+    value: problem.input_description
   };
-  metadata.input_description = {
+  problem.output_description = {
     format: "html",
-    value: metadata.input_description
+    value: problem.output_description
   };
-  metadata.output_description = {
-    format: "html",
-    value: metadata.output_description
-  };
-  metadata.hint = {
-    format: "html",
-    value: metadata.hint
-  };
-  metadata.test_case_score = null;
-  metadata.time_limit = 1000;
-  metadata.memory_limit = 256;
-  metadata.template = {};
-  metadata.spj = null;
-  metadata.rule_type = "ACM";
-  metadata.source = "iLeap http://ileap.csc.uvic.ca";
-  metadata.answers = [];
+  problem.hint = { format: "html", value: problem.hint };
+  problem.test_case_score = null;
+  problem.time_limit = 1000;
+  problem.memory_limit = 256;
+  problem.template = {};
+  problem.spj = null;
+  problem.rule_type = "ACM";
+  problem.source = "iLeap http://ileap.csc.uvic.ca";
+  problem.answers = [];
   // the rest
-  fs.mkdirSync(directory);
   testCases.forEach(tc => {
-    const inputFile = path.join(directory, `${tc.index}.in`);
-    const outputFile = path.join(directory, `${tc.index}.out`);
+    const inputFile = path.join(testCaseDir, `${tc.index}.in`);
+    const outputFile = path.join(testCaseDir, `${tc.index}.out`);
     fs.writeFileSync(inputFile, tc.input);
     fs.writeFileSync(outputFile, tc.output);
     info.test_cases[`${tc.index}`] = {
@@ -61,39 +60,30 @@ export default function Save(_testCases, metadata, sourceCode) {
       input_size: fs.statSync(inputFile).size
     };
   });
-  fs.writeFileSync(path.join(directory, "info"), JSON.stringify(info, null, 2));
-  const options = {
-    properties: ["openDirectory", "createDirectory", "promptToCreate"]
-  };
-  const createFiles = (dir, isNew) => {
-    window.saveTo = dir;
-    fs.writeFileSync(
-      path.join(dir, "problem.json"),
-      JSON.stringify(metadata, null, 2)
-    );
-    fs.writeFileSync(path.join(dir, "main.c"), sourceCode);
-    const output = fs.createWriteStream(path.join(dir, "test-cases.zip"));
-    const archive = archiver("zip", { zlib: { level: 9 } });
-    archive.on("error", error => alert(`Unexpected error: ${error}`));
-    archive.on("end", () =>
-      alert(
-        isNew
-          ? "The project was saved successfully"
-          : "The project was updated successfully"
-      )
-    );
-    archive.pipe(output);
-    archive.directory(directory, false);
-    archive.finalize();
-  };
-  if (window.saveTo) {
-    createFiles(window.saveTo, false);
-  } else {
-    dialog.showOpenDialog(options, dir => {
-      if (dir === undefined) {
-        return;
-      }
-      createFiles(dir[0], true);
-    });
-  }
+  fs.writeFileSync(
+    path.join(testCaseDir, "info"),
+    JSON.stringify(info, null, 2)
+  );
+  const isNew = window.saveTo === undefined;
+  window.saveTo = projectFile;
+  fs.writeFileSync(
+    path.join(projectDir, "problem.json"),
+    JSON.stringify(problem, null, 2)
+  );
+  fs.writeFileSync(path.join(projectDir, "main.c"), sourceCode);
+  const output = fs.createWriteStream(projectFile);
+  const archive = archiver("zip", {
+    zlib: { level: 9 }
+  });
+  archive.on("error", error => alert(`Unexpected error: ${error}`));
+  archive.on("end", () =>
+    alert(
+      isNew
+        ? "The project was saved successfully"
+        : "The project was updated successfully"
+    )
+  );
+  archive.pipe(output);
+  archive.directory(tmpDir, false);
+  archive.finalize();
 }
