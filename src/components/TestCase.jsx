@@ -42,7 +42,6 @@ class TestCase extends Component {
     }
   }
   render() {
-    const hidden = {visibility: 'hidden'};
     return (
       <div className="test-case">
         <span>{this.props.index + 1}.</span>
