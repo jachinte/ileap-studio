@@ -45,7 +45,7 @@
       "provider": "github",
       "repo": "ileap-studio",
       "owner": "jachinte",
-      "vPrefixedTagName": false
+      "vPrefixedTagName": true
     },
     "appImage": {
       "systemIntegration": "doNotAsk"
