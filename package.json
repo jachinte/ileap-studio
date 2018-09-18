@@ -9,13 +9,13 @@
   },
   "repository": "https://github.com/jachinte/ileap-studio",
   "license": "MIT",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "dependencies": {
     "archiver": "^3.0.0",
     "cross-env": "5.1.6",
     "draft-js": "^0.10.5",
     "electron-is-dev": "0.3.0",
-    "electron-log": "^2.2.6",
+    "electron-log": "^2.2.17",
     "electron-updater": "^3.1.2",
     "extract-zip": "^1.6.7",
     "md5": "^2.2.1",
@@ -45,7 +45,7 @@
       "provider": "github",
       "repo": "ileap-studio",
       "owner": "jachinte",
-      "vPrefixedTagName": true
+      "vPrefixedTagName": false
     },
     "appImage": {
       "systemIntegration": "doNotAsk"

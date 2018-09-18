@@ -1,15 +1,17 @@
 const electron = require("electron");
 const { app, dialog, BrowserWindow, Menu } = electron;
 
-var info = require('../package.json');
+var info = require("../package.json");
 const path = require("path");
 const isDev = require("electron-is-dev");
 const { autoUpdater } = require("electron-updater");
-autoUpdater.checkForUpdatesAndNotify();
+autoUpdater.logger = require("electron-log");
+autoUpdater.logger.transports.file.level = "info";
 
 let mainWindow;
 
 function createWindow() {
+  autoUpdater.checkForUpdatesAndNotify();
   mainWindow = new BrowserWindow({ width: 1024, height: 660 });
   mainWindow.loadURL(
     isDev
@@ -32,15 +34,19 @@ function createWindow() {
         {
           label: "About",
           click: function() {
-            dialog.showMessageBox(mainWindow, {
-              type: "info",
-              buttons: ["OK"],
-              title: "iLeap Studio",
-              message: "About",
-              detail: `You are running iLeap Studio v${info.version}.`
-            }, resp => {
-              console.log(resp);
-            });
+            dialog.showMessageBox(
+              mainWindow,
+              {
+                type: "info",
+                buttons: ["OK"],
+                title: "iLeap Studio",
+                message: "About",
+                detail: `You are running iLeap Studio v${info.version}.`
+              },
+              resp => {
+                console.log(resp);
+              }
+            );
           }
         }
       ]
