@@ -61,7 +61,7 @@ class Metadata extends Component {
               defaultValue={this.props.data.tags}/>
           </Tooltip>
           <label>Hint</label>
-          <Tooltip placement="top" overlay="A hint to solve the problem. In templates, do not forget to use &;lt; and &;gt; instead of < and >">
+          <Tooltip placement="top" overlay="A hint to solve the problem. In templates, do not forget to use &amp;lt; and &amp;gt; instead of < and >">
             <TextareaAutosize
               onChange={(e) => this.onFieldChange("hint", e.target.value)}
               minRows={3}
